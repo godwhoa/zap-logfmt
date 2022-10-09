@@ -87,6 +87,7 @@ func TestEncoderObjectFields(t *testing.T) {
 		{"reflected slice", "k=a,b", func(e zapcore.Encoder) { e.AddReflected("k", []string{"a", "b"}) }},
 		{"reflected slice of int", "k=1,2,3", func(e zapcore.Encoder) { e.AddReflected("k", []int16{1, 2, 3}) }},
 		{"reflected array", "k=a,b", func(e zapcore.Encoder) { e.AddReflected("k", [2]string{"a", "b"}) }},
+		{"reflected slice of []any[]any", "k=1,1.23,3,a", func(e zapcore.Encoder) { e.AddReflected("k", []interface{}{[]interface{}{1, 1.23, 3, "a"}}) }},
 	}
 
 	for _, tt := range tests {

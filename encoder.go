@@ -552,6 +552,24 @@ func (enc *literalEncoder) AppendReflected(value interface{}) error {
 	case reflect.String:
 		enc.AppendString(value.(string))
 		return nil
+	case reflect.Slice:
+		if rvalue.IsNil() {
+			enc.AppendByteString(nil)
+			return nil
+		}
+		// A non-nil slice is handled identically to an array.
+		fallthrough
+	case reflect.Array:
+		marshal := zapcore.ArrayMarshalerFunc(func(aenc zapcore.ArrayEncoder) error {
+			for i := 0; i < rvalue.Len(); i++ {
+				v := rvalue.Index(i).Interface()
+				if err := aenc.AppendReflected(v); err != nil {
+					return err
+				}
+			}
+			return nil
+		})
+		return enc.AppendArray(marshal)
 	default:
 		return ErrUnsupportedValueType
 	}
