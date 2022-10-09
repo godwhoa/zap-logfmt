@@ -1,4 +1,4 @@
-module github.com/jsternberg/zap-logfmt
+module github.com/godwhoa/zap-logfmt
 
 go 1.17
 
